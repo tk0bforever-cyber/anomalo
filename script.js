@@ -1,5 +1,5 @@
 
-// 🔥 CONFIG FIREBASE (REEMPLAZA CON EL TUYO)
+// 🔥 CONFIG FIREBASE (REEMPLAZA CON TU CONFIG REAL)
 const firebaseConfig = {
   apiKey: "TU_API_KEY",
   authDomain: "TU_AUTH",
@@ -16,15 +16,12 @@ const title = document.getElementById("title");
 const content = document.getElementById("content");
 const publish = document.getElementById("publish");
 
-/* ========================= */
-/* PUBLICAR */
-/* ========================= */
+/* ===================== */
+/* PUBLICAR POST */
+/* ===================== */
 publish.addEventListener("click", async () => {
 
-  if (!title.value || !content.value) {
-    alert("Escribe algo primero");
-    return;
-  }
+  if (!title.value || !content.value) return;
 
   await db.collection("posts").add({
     user: username.value || "Anónimo",
@@ -39,9 +36,9 @@ publish.addEventListener("click", async () => {
 
 });
 
-/* ========================= */
+/* ===================== */
 /* MOSTRAR POSTS EN VIVO */
-/* ========================= */
+/* ===================== */
 db.collection("posts")
   .orderBy("time", "desc")
   .onSnapshot(snapshot => {
@@ -56,19 +53,15 @@ db.collection("posts")
       post.classList.add("post");
 
       post.innerHTML = `
-        <div class="postHeader">
-          <h3>${data.title}</h3>
-          <span>👤 ${data.user}</span>
-        </div>
-
+        <h3>${data.title}</h3>
         <p>${data.content}</p>
+        <span>👤 ${data.user}</span>
 
-        <div class="actions">
-          <button class="likeBtn">💀 ${data.likes}</button>
-          <button class="replyBtn">Responder</button>
-        </div>
+        <button class="likeBtn">💀 ${data.likes}</button>
 
-        <input class="replyInput" placeholder="Escribe respuesta...">
+        <input class="replyInput" placeholder="Responder...">
+        <button class="replyBtn">Enviar</button>
+
         <div class="replies"></div>
       `;
 
@@ -86,7 +79,7 @@ db.collection("posts")
         });
       });
 
-      /* RESPONDER */
+      /* RESPUESTA */
       replyBtn.addEventListener("click", () => {
 
         if (!replyInput.value) return;
@@ -102,7 +95,7 @@ db.collection("posts")
         replyInput.value = "";
       });
 
-      /* RESPUESTAS EN VIVO */
+      /* MOSTRAR RESPUESTAS */
       db.collection("posts")
         .doc(doc.id)
         .collection("replies")
