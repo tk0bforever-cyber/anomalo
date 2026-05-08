@@ -2,81 +2,39 @@
 <html lang="es">
 
 <head>
-
   <meta charset="UTF-8">
+  <title>Anómalo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- 🔐 VERIFICACIÓN GOOGLE (LA QUE TE DA GOOGLE) -->
-  <meta name="google-site-verification" content="JPB6-kcmYoO0beJBrepqb3jOxaN8W8Z-SPNBYaFnKo4" />
-
-  <title>Anómalo | Historias de terror</title>
-
-</head>
-
-  <!-- SEO -->
-  <title>Anómalo | Historias de terror</title>
-  <meta name="description" content="Anómalo es un foro oscuro donde usuarios comparten historias de terror, experiencias paranormales y archivos misteriosos.">
-  <meta name="keywords" content="terror, historias de terror, creepypasta, paranormal, foro oscuro, anomalo, relatos de miedo">
-  <meta name="author" content="Anómalo">
-  <meta name="robots" content="index, follow">
-
-  <!-- OPEN GRAPH (REDES SOCIALES) -->
-  <meta property="og:title" content="Anómalo | Historias de terror">
-  <meta property="og:description" content="Un foro oscuro de historias paranormales y misterios sin resolver.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://tu-imagen.jpg">
-  <meta property="og:url" content="https://tu-sitio.vercel.app">
-
-  <!-- TWITTER -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Anómalo | Historias de terror">
-  <meta name="twitter:description" content="Historias paranormales y archivos misteriosos compartidos por usuarios.">
-  <meta name="twitter:image" content="https://tu-imagen.jpg">
-
-  <!-- ESTILOS -->
   <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-  <!-- TOP BAR -->
   <header class="topbar">
     <h1>ANÓMALO</h1>
   </header>
 
-  <!-- FEED -->
   <main class="feed">
 
-    <!-- FORMULARIO -->
+    <!-- CREAR POST -->
     <div class="create-post">
 
-      <h3>Escribe una historia</h3>
-
-      <input id="title" type="text" placeholder="Título de la historia">
-
-      <textarea id="content" placeholder="Escribe lo que pasó..."></textarea>
+      <input id="username" placeholder="Tu nombre (o Anónimo)">
+      <input id="title" placeholder="Título">
+      <textarea id="content" placeholder="Escribe tu historia..."></textarea>
 
       <button id="publish">Publicar</button>
 
     </div>
 
-    <!-- POSTS DE EJEMPLO -->
-    <div class="post">
-      <h3>Escuché golpes en la pared</h3>
-      <p>Vivo solo, pero cada noche alguien responde desde adentro...</p>
-      <span>👁 Anónimo</span>
-    </div>
-
-    <div class="post">
-      <h3>La cámara grabó algo detrás de mí</h3>
-      <p>Yo estaba solo… pero no aparezco solo en el video.</p>
-      <span>👁 Anónimo</span>
-    </div>
-
   </main>
 
-  <!-- SCRIPT -->
-  <script src="script.js" defer></script>
+  <!-- FIREBASE CDN -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+
+  <script src="script.js"></script>
 
 </body>
 
