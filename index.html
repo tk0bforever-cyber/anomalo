@@ -3,10 +3,16 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Anómalo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <title>Anómalo</title>
+
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+
 </head>
 
 <body>
@@ -17,24 +23,18 @@
 
   <main class="feed">
 
-    <!-- CREAR POST -->
     <div class="create-post">
-
-      <input id="username" placeholder="Tu nombre (o Anónimo)">
-      <input id="title" placeholder="Título">
+      <input id="username" placeholder="Nombre (Anónimo)">
+      <input id="title" placeholder="Título de la historia">
       <textarea id="content" placeholder="Escribe tu historia..."></textarea>
-
       <button id="publish">Publicar</button>
-
     </div>
+
+    <!-- aquí aparecen los posts -->
 
   </main>
 
-  <!-- FIREBASE CDN -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
-
-  <script src="script.js"></script>
+  <script src="script.js" defer></script>
 
 </body>
 
