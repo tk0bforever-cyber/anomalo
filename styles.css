@@ -1,72 +1,71 @@
 
 body{
-  background: radial-gradient(circle at top, #1a0000, #0b0b0b);
-  color:white;
+  margin:0;
   font-family:Arial;
+  background: radial-gradient(circle at top, #1a0000, #000);
+  color:white;
 }
 
+/* HEADER */
 .topbar{
   text-align:center;
-  padding:20px;
-  font-size:20px;
-  letter-spacing:5px;
-  border-bottom:1px solid red;
+  padding:25px;
+  font-size:24px;
+  color:red;
+  letter-spacing:6px;
+  border-bottom:1px solid #300;
 }
 
+/* FEED */
 .feed{
-  max-width:750px;
+  max-width:800px;
   margin:auto;
   padding:20px;
 }
 
+/* FORM */
 .create-post{
-  background:#141414;
+  background:#111;
   padding:15px;
-  border-radius:12px;
+  border:1px solid #300;
+  border-radius:10px;
   margin-bottom:20px;
-  border:1px solid #2a0000;
 }
 
 input, textarea{
   width:100%;
-  margin:6px 0;
+  margin:5px 0;
   padding:10px;
-  background:#1f1f1f;
+  background:#1a1a1a;
   color:white;
   border:none;
-  border-radius:6px;
 }
 
+/* BOTONES */
 button{
-  background:red;
-  color:white;
-  border:none;
-  padding:8px;
+  width:100%;
+  padding:10px;
   margin-top:5px;
+  background:red;
+  border:none;
+  color:white;
   cursor:pointer;
-  border-radius:6px;
 }
 
+/* POSTS */
 .post{
   background:#151515;
-  padding:15px;
   margin-bottom:15px;
+  padding:15px;
   border-left:3px solid red;
   border-radius:8px;
 }
 
-.postHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.actions{
-  margin-top:10px;
-}
-
+/* RESPUESTAS */
 .reply{
-  font-size:14px;
+  font-size:13px;
   opacity:0.8;
   margin-top:5px;
+  padding-left:10px;
+  border-left:1px solid #500;
 }
