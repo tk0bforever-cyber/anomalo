@@ -1,14 +1,19 @@
 
-// 🔥 CONFIG FIREBASE (REEMPLAZA CON TU CONFIG REAL)
+// 🔥 CONFIG FIREBASE (TUYA)
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_AUTH",
-  projectId: "TU_PROJECT_ID"
+  apiKey: "AIzaSyDhcSWK2tVIioM9d2mpOibSRi7irEqaCWw",
+  authDomain: "anomalo-e523e.firebaseapp.com",
+  projectId: "anomalo-e523e",
+  storageBucket: "anomalo-e523e.appspot.com",
+  messagingSenderId: "434647831932",
+  appId: "1:434647831932:web:498da80cdf9b164b8400f9"
 };
 
+// INICIALIZAR
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+// ELEMENTOS
 const feed = document.querySelector(".feed");
 
 const username = document.getElementById("username");
@@ -37,7 +42,7 @@ publish.addEventListener("click", async () => {
 });
 
 /* ===================== */
-/* MOSTRAR POSTS EN VIVO */
+/* MOSTRAR POSTS */
 /* ===================== */
 db.collection("posts")
   .orderBy("time", "desc")
@@ -95,7 +100,7 @@ db.collection("posts")
         replyInput.value = "";
       });
 
-      /* MOSTRAR RESPUESTAS */
+      /* RESPUESTAS EN TIEMPO REAL */
       db.collection("posts")
         .doc(doc.id)
         .collection("replies")

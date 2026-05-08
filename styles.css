@@ -9,39 +9,39 @@ body{
 /* HEADER */
 .topbar{
   text-align:center;
-  padding:25px;
-  font-size:24px;
-  color:red;
+  padding:20px;
+  font-size:22px;
   letter-spacing:6px;
+  color:red;
   border-bottom:1px solid #300;
 }
 
-/* FEED */
+/* CONTENEDOR */
 .feed{
   max-width:800px;
   margin:auto;
   padding:20px;
 }
 
-/* FORM */
+/* FORMULARIO */
 .create-post{
   background:#111;
   padding:15px;
-  border:1px solid #300;
   border-radius:10px;
+  border:1px solid #300;
   margin-bottom:20px;
 }
 
 input, textarea{
   width:100%;
-  margin:5px 0;
   padding:10px;
+  margin:5px 0;
   background:#1a1a1a;
-  color:white;
   border:none;
+  color:white;
 }
 
-/* BOTONES */
+/* BOTÓN */
 button{
   width:100%;
   padding:10px;
@@ -52,11 +52,11 @@ button{
   cursor:pointer;
 }
 
-/* POSTS */
+/* POST */
 .post{
   background:#151515;
-  margin-bottom:15px;
   padding:15px;
+  margin-bottom:15px;
   border-left:3px solid red;
   border-radius:8px;
 }
