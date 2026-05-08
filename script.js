@@ -1,4 +1,6 @@
 
+console.log("SCRIPT OK");
+
 // 🔥 CONFIG FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyDhcSWK2tVIioM9d2mpOibSRi7irEqaCWw",
@@ -9,46 +11,36 @@ const firebaseConfig = {
   appId: "1:434647831932:web:498da80cdf9b164b8400f9"
 };
 
-// 🔥 INICIALIZAR (IMPORTANTE compat)
+// INIT (IMPORTANTE compat)
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// ELEMENTOS
-const username = document.getElementById("username");
-const title = document.getElementById("title");
-const content = document.getElementById("content");
-const publish = document.getElementById("publish");
-const feed = document.querySelector(".feed");
-
-/* ========================= */
-/* BOTÓN PUBLICAR */
-/* ========================= */
-publish.addEventListener("click", async () => {
+document.getElementById("publish").addEventListener("click", async () => {
 
   console.log("CLICK OK");
 
-  if (!title.value || !content.value) {
-    alert("Completa todo");
+  const user = document.getElementById("username").value;
+  const title = document.getElementById("title").value;
+  const content = document.getElementById("content").value;
+
+  if (!title || !content) {
+    alert("Falta info");
     return;
   }
 
   try {
     await db.collection("posts").add({
-      user: username.value || "Anónimo",
-      title: title.value,
-      content: content.value,
-      likes: 0,
+      user: user || "Anónimo",
+      title,
+      content,
       time: Date.now()
     });
 
-    console.log("PUBLICADO OK");
-
-    title.value = "";
-    content.value = "";
+    alert("Publicado ✔");
 
   } catch (e) {
-    console.error("ERROR FIREBASE:", e);
-    alert("Error Firebase (mira consola)");
+    console.error(e);
+    alert("Error Firebase");
   }
 
 });
