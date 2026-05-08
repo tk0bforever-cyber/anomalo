@@ -1,5 +1,5 @@
 
-// 🔥 CONFIG
+// 🔥 CONFIG FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyDhcSWK2tVIioM9d2mpOibSRi7irEqaCWw",
   authDomain: "anomalo-e523e.firebaseapp.com",
@@ -9,7 +9,7 @@ const firebaseConfig = {
   appId: "1:434647831932:web:498da80cdf9b164b8400f9"
 };
 
-// 🔥 INICIALIZAR
+// 🔥 INICIALIZAR (IMPORTANTE compat)
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -20,15 +20,15 @@ const content = document.getElementById("content");
 const publish = document.getElementById("publish");
 const feed = document.querySelector(".feed");
 
-/* ===================== */
+/* ========================= */
 /* BOTÓN PUBLICAR */
-/* ===================== */
+/* ========================= */
 publish.addEventListener("click", async () => {
 
-  console.log("CLICK DETECTADO"); // 👈 prueba visual
+  console.log("CLICK OK");
 
   if (!title.value || !content.value) {
-    alert("Escribe algo");
+    alert("Completa todo");
     return;
   }
 
@@ -41,14 +41,14 @@ publish.addEventListener("click", async () => {
       time: Date.now()
     });
 
+    console.log("PUBLICADO OK");
+
     title.value = "";
     content.value = "";
 
-    console.log("PUBLICADO ✔");
-
-  } catch (error) {
-    console.error("ERROR FIREBASE:", error);
-    alert("Error al publicar (revisa consola)");
+  } catch (e) {
+    console.error("ERROR FIREBASE:", e);
+    alert("Error Firebase (mira consola)");
   }
 
 });
