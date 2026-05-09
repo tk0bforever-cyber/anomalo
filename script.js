@@ -1,46 +1,182 @@
+// =========================
+// 4NOMAL0 HORROR SCRIPT
+// =========================
 
-console.log("SCRIPT OK");
+// Mensajes perturbadores
+const creepyMessages = [
+    "NO MIRES DETRÁS DE TI",
+    "ALGUIEN ESTÁ OBSERVANDO",
+    "LA SEÑAL NO ES HUMANA",
+    "NO APAGUES EL MONITOR",
+    "YA ENTRAMOS",
+    "CORRE",
+    "SIGUE MIRANDO"
+];
 
-// 🔥 CONFIG FIREBASE
-const firebaseConfig = {
-  apiKey: "AIzaSyDhcSWK2tVIioM9d2mpOibSRi7irEqaCWw",
-  authDomain: "anomalo-e523e.firebaseapp.com",
-  projectId: "anomalo-e523e",
-  storageBucket: "anomalo-e523e.appspot.com",
-  messagingSenderId: "434647831932",
-  appId: "1:434647831932:web:498da80cdf9b164b8400f9"
-};
+// Sonido glitch falso
+function playGlitch() {
 
-// INIT (IMPORTANTE compat)
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+    const audio = new Audio(
+        "https://www.soundjay.com/button/beep-07.wav"
+    );
 
-document.getElementById("publish").addEventListener("click", async () => {
+    audio.volume = 0.2;
+    audio.play();
+}
 
-  console.log("CLICK OK");
+// Mostrar mensaje oculto
+function revealMessage() {
 
-  const user = document.getElementById("username").value;
-  const title = document.getElementById("title").value;
-  const content = document.getElementById("content").value;
+    const msg = document.getElementById("message");
 
-  if (!title || !content) {
-    alert("Falta info");
-    return;
-  }
+    msg.classList.add("show");
 
-  try {
-    await db.collection("posts").add({
-      user: user || "Anónimo",
-      title,
-      content,
-      time: Date.now()
-    });
+    document.body.style.background = "#120000";
 
-    alert("Publicado ✔");
+    playGlitch();
 
-  } catch (e) {
-    console.error(e);
-    alert("Error Firebase");
-  }
+    setTimeout(() => {
 
-});
+        alert("NO DEBISTE ENTRAR");
+
+    }, 2500);
+}
+
+// Texto aleatorio creepy
+function randomCreepyText() {
+
+    const warning = document.querySelector(".warning");
+
+    setInterval(() => {
+
+        const random =
+            creepyMessages[
+                Math.floor(
+                    Math.random() * creepyMessages.length
+                )
+            ];
+
+        warning.innerText = random;
+
+    }, 3000);
+}
+
+// Efecto de glitch visual
+function randomGlitch() {
+
+    setInterval(() => {
+
+        document.body.style.filter =
+            "contrast(150%) brightness(120%)";
+
+        setTimeout(() => {
+
+            document.body.style.filter = "none";
+
+        }, 120);
+
+    }, 5000);
+}
+
+// Pantalla roja aleatoria
+function redFlash() {
+
+    setInterval(() => {
+
+        const randomChance = Math.random();
+
+        if(randomChance > 0.7){
+
+            document.body.style.background = "#300";
+
+            setTimeout(() => {
+
+                document.body.style.background = "black";
+
+            }, 200);
+        }
+
+    }, 4000);
+}
+
+// Crear caras fantasma
+function createGhostFace(){
+
+    const ghost = document.createElement("div");
+
+    ghost.innerHTML = "☠";
+
+    ghost.style.position = "fixed";
+    ghost.style.left =
+        Math.random() * window.innerWidth + "px";
+
+    ghost.style.top =
+        Math.random() * window.innerHeight + "px";
+
+    ghost.style.fontSize = "40px";
+
+    ghost.style.opacity = "0";
+
+    ghost.style.color = "white";
+
+    ghost.style.transition = "0.5s";
+
+    document.body.appendChild(ghost);
+
+    setTimeout(() => {
+        ghost.style.opacity = "0.8";
+    },100);
+
+    setTimeout(() => {
+        ghost.style.opacity = "0";
+    },800);
+
+    setTimeout(() => {
+        ghost.remove();
+    },1200);
+}
+
+// Apariciones aleatorias
+function ghostEvents(){
+
+    setInterval(() => {
+
+        const chance = Math.random();
+
+        if(chance > 0.8){
+            createGhostFace();
+            playGlitch();
+        }
+
+    }, 3500);
+}
+
+// Cambiar título del navegador
+function titleDistortion(){
+
+    const titles = [
+        "4NOMAL0",
+        "RUN",
+        "DON'T LOOK",
+        "WATCHING YOU",
+        "SIGNAL LOST"
+    ];
+
+    setInterval(() => {
+
+        document.title =
+            titles[
+                Math.floor(
+                    Math.random() * titles.length
+                )
+            ];
+
+    }, 2000);
+}
+
+// Iniciar efectos
+randomCreepyText();
+randomGlitch();
+redFlash();
+ghostEvents();
+titleDistortion();

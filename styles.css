@@ -1,71 +1,334 @@
+/* =========================
+   TRUE HORROR STYLE
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Courier New, monospace;
+}
 
 body{
-  margin:0;
-  font-family:Arial;
-  background: radial-gradient(circle at top, #1a0000, #000);
-  color:white;
+    background:#000;
+    overflow:hidden;
+    color:white;
+    height:100vh;
+    cursor:none;
+    animation:screenShake 8s infinite;
 }
 
-/* HEADER */
-.topbar{
-  text-align:center;
-  padding:20px;
-  font-size:22px;
-  letter-spacing:6px;
-  color:red;
-  border-bottom:1px solid #300;
+/* RUIDO ANALOGICO */
+
+.noise{
+
+    position:fixed;
+    width:100%;
+    height:100%;
+
+    background-image:
+    url("https://media.tenor.com/q76vASnQ7WAAAAAM/static.gif");
+
+    opacity:0.04;
+
+    mix-blend-mode:screen;
+
+    pointer-events:none;
+
+    z-index:999;
 }
 
-/* CONTENEDOR */
-.feed{
-  max-width:800px;
-  margin:auto;
-  padding:20px;
+/* SOMBRA OSCURA */
+
+.darkness{
+
+    position:fixed;
+    width:100%;
+    height:100%;
+
+    background:
+    radial-gradient(
+        circle,
+        transparent 0%,
+        rgba(0,0,0,0.7) 45%,
+        rgba(0,0,0,1) 100%
+    );
+
+    z-index:-1;
 }
 
-/* FORMULARIO */
-.create-post{
-  background:#111;
-  padding:15px;
-  border-radius:10px;
-  border:1px solid #300;
-  margin-bottom:20px;
+/* CONTENIDO */
+
+.container{
+
+    width:100%;
+    height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+
+    text-align:center;
+
+    position:relative;
 }
 
-input, textarea{
-  width:100%;
-  padding:10px;
-  margin:5px 0;
-  background:#1a1a1a;
-  border:none;
-  color:white;
+/* TITULO */
+
+h1{
+
+    font-size:7rem;
+
+    color:#8b0000;
+
+    text-shadow:
+    0 0 10px red,
+    0 0 25px darkred,
+    0 0 60px red;
+
+    letter-spacing:12px;
+
+    animation:
+    glitch 0.2s infinite,
+    flicker 4s infinite;
 }
 
-/* BOTÓN */
+/* TEXTO */
+
+p{
+
+    margin-top:25px;
+
+    width:70%;
+
+    color:#999;
+
+    line-height:2;
+
+    font-size:1rem;
+
+    animation:faint 5s infinite;
+}
+
+/* BOTON */
+
 button{
-  width:100%;
-  padding:10px;
-  margin-top:5px;
-  background:red;
-  border:none;
-  color:white;
-  cursor:pointer;
+
+    margin-top:40px;
+
+    padding:18px 45px;
+
+    background:black;
+
+    color:red;
+
+    border:1px solid darkred;
+
+    font-size:1rem;
+
+    letter-spacing:4px;
+
+    cursor:pointer;
+
+    transition:0.3s;
 }
 
-/* POST */
-.post{
-  background:#151515;
-  padding:15px;
-  margin-bottom:15px;
-  border-left:3px solid red;
-  border-radius:8px;
+button:hover{
+
+    background:#220000;
+
+    box-shadow:
+    0 0 15px red,
+    0 0 40px darkred;
+
+    transform:scale(1.05);
 }
 
-/* RESPUESTAS */
-.reply{
-  font-size:13px;
-  opacity:0.8;
-  margin-top:5px;
-  padding-left:10px;
-  border-left:1px solid #500;
+/* MENSAJE */
+
+.hiddenMessage{
+
+    margin-top:40px;
+
+    color:red;
+
+    font-size:2rem;
+
+    opacity:0;
+
+    text-shadow:
+    0 0 10px red,
+    0 0 25px darkred;
+
+    transition:2s;
+}
+
+.show{
+    opacity:1;
+}
+
+/* TEXTO ABAJO */
+
+.warning{
+
+    position:absolute;
+
+    bottom:20px;
+
+    color:#400;
+
+    font-size:0.8rem;
+
+    letter-spacing:5px;
+
+    animation:blink 0.8s infinite;
+}
+
+/* CARAS */
+
+.face{
+
+    position:fixed;
+
+    width:200px;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    z-index:998;
+
+    animation:faceFlash 0.2s forwards;
+}
+
+/* ANIMACIONES */
+
+@keyframes glitch{
+
+    0%{
+        transform:translate(0);
+    }
+
+    20%{
+        transform:translate(-4px,2px);
+    }
+
+    40%{
+        transform:translate(4px,-2px);
+    }
+
+    60%{
+        transform:translate(-2px,4px);
+    }
+
+    80%{
+        transform:translate(2px,-4px);
+    }
+
+    100%{
+        transform:translate(0);
+    }
+}
+
+@keyframes flicker{
+
+    0%{
+        opacity:1;
+    }
+
+    3%{
+        opacity:0.4;
+    }
+
+    6%{
+        opacity:1;
+    }
+
+    7%{
+        opacity:0.2;
+    }
+
+    8%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:1;
+    }
+}
+
+@keyframes blink{
+
+    50%{
+        opacity:0;
+    }
+}
+
+@keyframes faint{
+
+    50%{
+        opacity:0.5;
+    }
+}
+
+@keyframes screenShake{
+
+    0%{
+        transform:translate(0);
+    }
+
+    98%{
+        transform:translate(0);
+    }
+
+    99%{
+        transform:translate(2px,-2px);
+    }
+
+    100%{
+        transform:translate(-2px,2px);
+    }
+}
+
+@keyframes faceFlash{
+
+    0%{
+        opacity:0;
+    }
+
+    40%{
+        opacity:0.8;
+    }
+
+    100%{
+        opacity:0;
+    }
+}
+
+/* CRT */
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:
+    linear-gradient(
+        rgba(255,255,255,0.02) 50%,
+        rgba(0,0,0,0.05) 50%
+    );
+
+    background-size:100% 3px;
+
+    pointer-events:none;
+
+    z-index:1000;
 }
