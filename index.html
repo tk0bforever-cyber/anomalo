@@ -245,5 +245,41 @@ function revealMessage(){
 
 <script src="script.js"></script>
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Identificador de Visitante</title>
+</head>
+<body>
+    <h1>Bienvenido a la página</h1>
+    <p>Tu ID de visitante es: <strong id="userID"></strong></p>
+
+    <script>
+        // Función para generar un ID único
+        function generarID() {
+            return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Obtener o crear el ID del visitante
+        let visitanteID = localStorage.getItem('visitanteID');
+        
+        if (!visitanteID) {
+            visitanteID = generarID();
+            localStorage.setItem('visitanteID', visitanteID);
+        }
+
+        // Mostrar el ID en la página
+        document.getElementById('userID').textContent = visitanteID;
+
+        // Opcional: enviar el ID a la consola o a un servidor
+        console.log('ID del visitante actual:', visitanteID);
+        
+        // Si necesitas enviarlo a un servidor (descomentar)
+        // fetch('/registrar-visita', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ id: visitanteID, timestamp: new Date().toISOString() })
+        // });
+    </script>
 </body>
 </html>
