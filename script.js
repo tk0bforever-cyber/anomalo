@@ -238,3 +238,5 @@ function fakeCrash(){
 // INICIO GENERAL
 
 titleCorruption();
+
+const idNotaParaAbrir = 'nota1'
