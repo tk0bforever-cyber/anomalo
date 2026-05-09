@@ -3,119 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro Privado - Solo visible para ti</title>
+    <title>Registro Secreto - ID oculto para todos</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 500px;
+            max-width: 600px;
             margin: 50px auto;
             padding: 20px;
-            background: #f4f4f4;
+            background: #f0f2f5;
         }
         .card {
             background: white;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
         }
         input, button {
             padding: 10px;
-            margin-top: 10px;
+            margin-top: 8px;
+            margin-bottom: 12px;
             width: 100%;
             box-sizing: border-box;
             font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
         }
-        .id-secret {
-            background: #fff3cd;
-            border-left: 6px solid #ffc107;
-            padding: 15px;
-            margin-top: 20px;
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .exito {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 15px;
             display: none;
         }
-        .id-value {
+        .zona-admin {
+            margin-top: 30px;
+            border-top: 2px dashed #ccc;
+            padding-top: 20px;
+        }
+        .zona-admin h3 {
+            color: #d9534f;
+        }
+        .registro-guardado {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+        }
+        .id-secreto {
             font-family: monospace;
             font-weight: bold;
-            font-size: 1.2rem;
             color: #d9534f;
         }
         .error {
             color: #d9534f;
             font-size: 0.9rem;
-            margin-top: 8px;
         }
-        hr {
-            margin: 20px 0;
-        }
-        .info-publica {
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 8px;
+        label {
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
+
 <div class="card">
-    <h2>📋 Ficha de registro</h2>
-    <p><strong>Nombre:</strong> Ana López</p>
-    <p><strong>Email:</strong> ana@example.com</p>
-    <p><strong>Fecha de registro:</strong> 15/05/2026</p>
+    <h2>📝 Formulario de registro</h2>
+    <p>Completa tus datos. Tu ID quedará <strong>oculto para ti</strong> (solo el administrador puede verlo).</p>
 
-    <hr>
+    <label for="nombre">Nombre completo:</label>
+    <input type="text" id="nombre" placeholder="Ej: Ana López">
 
-    <div class="info-publica">
-        ✅ Esta información es visible para todos.<br>
-        🔒 El <strong>ID interno</strong> está protegido: solo tú puedes verlo si ingresas tu clave personal.
+    <label for="email">Correo electrónico:</label>
+    <input type="email" id="email" placeholder="ana@ejemplo.com">
+
+    <button id="btnRegistrar">Registrarme</button>
+
+    <div id="mensajeExito" class="exito">
+        ✅ Registro completado. Gracias.
     </div>
+    <div id="errorForm" class="error"></div>
+</div>
 
-    <hr>
+<div class="card zona-admin">
+    <h3>🔐 Área solo para administrador</h3>
+    <p>Introduce tu clave secreta para ver los IDs generados (los usuarios nunca ven esto).</p>
 
-    <label for="clave">🔐 Tu clave personal (solo tú la sabes):</label>
-    <input type="password" id="clave" placeholder="Introduce tu clave secreta">
-    <button id="mostrarIdBtn">Mostrar mi ID privado</button>
+    <label for="claveAdmin">Clave de administrador:</label>
+    <input type="password" id="claveAdmin" placeholder="Clave secreta">
+    <button id="btnVerIDs">Mostrar IDs ocultos</button>
 
-    <div id="seccionIdPrivado" class="id-secret">
-        <strong>🆔 ID del registro (visible solo para ti):</strong><br>
-        <span class="id-value" id="idValor">ID-XYZ-9876-ABC</span>
-        <p style="font-size:0.8rem; margin-top:8px;">🔒 Nadie más puede ver esto porque solo tú conoces la clave.</p>
+    <div id="registrosGuardados" class="registro-guardado">
+        <strong>📋 Registros con ID (solo visibles para ti):</strong>
+        <div id="listaIDs" style="margin-top: 10px;"></div>
+        <p style="font-size:0.8rem; margin-top:8px;">🔒 El usuario nunca vio ni verá estos IDs.</p>
     </div>
-    <div id="mensajeError" class="error"></div>
+    <div id="errorAdmin" class="error"></div>
 </div>
 
 <script>
-    // Simulación de un ID interno que solo debe ver el usuario dueño
-    const ID_REAL = "ID-XYZ-9876-ABC";
+    // Base de datos simulada (se guarda en memoria mientras la página esté abierta)
+    let registros = [];
 
-    // Contraseña que solo tú conoces (cámbiala por la que quieras)
-    const CLAVE_CORRECTA = "miclave123";
+    // CLAVE solo para el administrador (CÁMBIALA por la que quieras)
+    const CLAVE_ADMIN = "admin123";
 
-    const boton = document.getElementById("mostrarIdBtn");
-    const inputClave = document.getElementById("clave");
-    const seccionId = document.getElementById("seccionIdPrivado");
-    const mensajeError = document.getElementById("mensajeError");
-    const spanId = document.getElementById("idValor");
+    // Función para generar ID único (el usuario no lo sabe)
+    function generarID() {
+        return 'ID-' + Date.now() + '-' + Math.random().toString(36).substr(2, 8).toUpperCase();
+    }
 
-    // Asegurar que al cargar la página el ID esté oculto
-    seccionId.style.display = "none";
-    mensajeError.textContent = "";
+    // Registrar nuevo usuario
+    document.getElementById("btnRegistrar").addEventListener("click", function() {
+        const nombre = document.getElementById("nombre").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const mensajeExito = document.getElementById("mensajeExito");
+        const errorDiv = document.getElementById("errorForm");
 
-    boton.addEventListener("click", function() {
-        const claveIngresada = inputClave.value;
+        // Validar campos
+        if (nombre === "" || email === "") {
+            errorDiv.textContent = "❌ Por favor, completa todos los campos.";
+            mensajeExito.style.display = "none";
+            return;
+        }
+        if (!email.includes("@") || !email.includes(".")) {
+            errorDiv.textContent = "❌ Introduce un correo válido.";
+            mensajeExito.style.display = "none";
+            return;
+        }
 
-        if (claveIngresada === CLAVE_CORRECTA) {
-            // Clave correcta -> mostrar el ID real
-            spanId.textContent = ID_REAL;
-            seccionId.style.display = "block";
-            mensajeError.textContent = "";
-            inputClave.value = ""; // opcional: limpiar por seguridad
+        // Generar ID automático (el usuario NO lo ve)
+        const nuevoID = generarID();
+
+        // Guardar registro
+        const nuevoRegistro = {
+            id: nuevoID,
+            nombre: nombre,
+            email: email,
+            fecha: new Date().toLocaleString()
+        };
+        registros.push(nuevoRegistro);
+
+        // Limpiar campos
+        document.getElementById("nombre").value = "";
+        document.getElementById("email").value = "";
+
+        // Mostrar mensaje de éxito SIN mostrar el ID
+        errorDiv.textContent = "";
+        mensajeExito.style.display = "block";
+        setTimeout(() => {
+            mensajeExito.style.display = "none";
+        }, 3000);
+
+        // Opcional: guardar en localStorage para que persista al recargar
+        localStorage.setItem("registrosAdmin", JSON.stringify(registros));
+    });
+
+    // Cargar registros guardados al iniciar (desde localStorage)
+    function cargarRegistrosGuardados() {
+        const guardados = localStorage.getItem("registrosAdmin");
+        if (guardados) {
+            registros = JSON.parse(guardados);
+        }
+    }
+    cargarRegistrosGuardados();
+
+    // Ver IDs solo con clave de admin
+    document.getElementById("btnVerIDs").addEventListener("click", function() {
+        const claveIngresada = document.getElementById("claveAdmin").value;
+        const divRegistros = document.getElementById("registrosGuardados");
+        const listaIDs = document.getElementById("listaIDs");
+        const errorAdmin = document.getElementById("errorAdmin");
+
+        if (claveIngresada === CLAVE_ADMIN) {
+            // Clave correcta: mostrar todos los IDs ocultos
+            if (registros.length === 0) {
+                listaIDs.innerHTML = "<em>No hay registros aún.</em>";
+            } else {
+                let html = "<ul style='list-style:none; padding-left:0;'>";
+                for (let i = 0; i < registros.length; i++) {
+                    html += `<li style="margin-bottom:12px; border-bottom:1px solid #ddd; padding-bottom:6px;">
+                                <strong>👤 ${escapeHtml(registros[i].nombre)}</strong><br>
+                                📧 ${escapeHtml(registros[i].email)}<br>
+                                🆔 <span class="id-secreto">${escapeHtml(registros[i].id)}</span><br>
+                                📅 ${registros[i].fecha}
+                             </li>`;
+                }
+                html += "</ul>";
+                listaIDs.innerHTML = html;
+            }
+            divRegistros.style.display = "block";
+            errorAdmin.textContent = "";
+            document.getElementById("claveAdmin").value = "";
         } else {
-            // Clave incorrecta: ocultar y mostrar error
-            seccionId.style.display = "none";
-            mensajeError.textContent = "❌ Clave incorrecta. No puedes ver el ID del registro.";
-            inputClave.value = "";
+            // Clave incorrecta: no mostrar nada
+            divRegistros.style.display = "none";
+            errorAdmin.textContent = "❌ Clave incorrecta. No tienes permiso para ver los IDs.";
+            document.getElementById("claveAdmin").value = "";
         }
     });
+
+    // Pequeña función para evitar inyección HTML
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
 </script>
 
 </body>
-</html>>
+</html>
 
