@@ -239,4 +239,4 @@ function fakeCrash(){
 
 titleCorruption();
 
-const idNotaParaAbrir = 'nota1'
+const idNotaParaAbrir = const idNotaParaAbrir = 'blocknotas'
