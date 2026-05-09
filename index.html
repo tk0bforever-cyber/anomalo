@@ -5,6 +5,188 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>4NOMAL0</title>
 
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Courier New, monospace;
+}
+
+body{
+    background:black;
+    color:white;
+    overflow:hidden;
+}
+
+video{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0.15;
+    z-index:-2;
+}
+
+.overlay{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:
+    repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.03),
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    animation:flicker 0.15s infinite;
+    z-index:-1;
+}
+
+@keyframes flicker{
+    0%{opacity:0.9;}
+    50%{opacity:1;}
+    100%{opacity:0.92;}
+}
+
+.container{
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+    padding:20px;
+}
+
+h1{
+    font-size:5rem;
+    color:red;
+    text-shadow:
+    0 0 10px red,
+    0 0 30px darkred;
+    animation:glitch 2s infinite;
+}
+
+@keyframes glitch{
+    0%{transform:translate(0);}
+    20%{transform:translate(-2px,2px);}
+    40%{transform:translate(2px,-2px);}
+    60%{transform:translate(-2px,-1px);}
+    80%{transform:translate(2px,1px);}
+    100%{transform:translate(0);}
+}
+
+p{
+    margin-top:20px;
+    max-width:700px;
+    color:#cfcfcf;
+    line-height:1.8;
+    font-size:1.1rem;
+}
+
+button{
+    margin-top:30px;
+    padding:15px 35px;
+    background:black;
+    border:2px solid red;
+    color:red;
+    font-size:1rem;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:red;
+    color:black;
+    box-shadow:0 0 20px red;
+}
+
+.warning{
+    position:absolute;
+    bottom:20px;
+    font-size:0.8rem;
+    color:#666;
+    animation:blink 1s infinite;
+}
+
+@keyframes blink{
+    50%{
+        opacity:0;
+    }
+}
+
+.hiddenMessage{
+    margin-top:30px;
+    color:red;
+    opacity:0;
+    transition:1s;
+}
+
+.show{
+    opacity:1;
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay"></div>
+
+<div class="container">
+
+    <h1>4NOMAL0</h1>
+
+    <p>
+        “No abras la transmisión después de las 03:33 AM.
+        Lo que aparece en pantalla no siempre permanece dentro de ella.”
+    </p>
+
+    <button onclick="revealMessage()">
+        ENTRAR
+    </button>
+
+    <div class="hiddenMessage" id="message">
+        TU DISPOSITIVO HA SIDO OBSERVADO
+    </div>
+
+    <div class="warning">
+        SIGNAL LOST // CHANNEL UNKNOWN
+    </div>
+
+</div>
+
+<script>
+function revealMessage(){
+
+    const msg = document.getElementById("message");
+
+    msg.classList.add("show");
+
+    setTimeout(() => {
+        document.body.style.background = "#120000";
+    }, 1000);
+
+    setTimeout(() => {
+        alert("NO DEBISTE ENTRAR");
+    }, 2500);
+}
+</script>
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4NOMAL0</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
 
