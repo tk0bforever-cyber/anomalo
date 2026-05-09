@@ -1,165 +1,188 @@
 // =========================
-// 4NOMAL0 HORROR SCRIPT
+// REAL HORROR EVENTS
 // =========================
 
-// Mensajes perturbadores
-const creepyMessages = [
-    "NO MIRES DETRÁS DE TI",
-    "ALGUIEN ESTÁ OBSERVANDO",
-    "LA SEÑAL NO ES HUMANA",
-    "NO APAGUES EL MONITOR",
+const creepyTexts = [
+
+    "NO ESTÁS SOLO",
+    "NO VOLTEES",
+    "TE ENCONTRAMOS",
     "YA ENTRAMOS",
-    "CORRE",
-    "SIGUE MIRANDO"
+    "NO APAGUES LA PANTALLA",
+    "MÍRALO DETRÁS DE TI",
+    "SIGUE OBSERVANDO"
 ];
 
-// Sonido glitch falso
-function playGlitch() {
+// BOTON ENTRAR
 
-    const audio = new Audio(
-        "https://www.soundjay.com/button/beep-07.wav"
-    );
+function revealMessage(){
 
-    audio.volume = 0.2;
-    audio.play();
-}
-
-// Mostrar mensaje oculto
-function revealMessage() {
-
-    const msg = document.getElementById("message");
+    const msg =
+        document.getElementById("message");
 
     msg.classList.add("show");
 
-    document.body.style.background = "#120000";
+    msg.innerText =
+        "CONEXIÓN ESTABLECIDA";
 
-    playGlitch();
+    document.body.style.background =
+        "#120000";
+
+    playDisturbingSound();
+
+    screenDistortion();
+
+    startRandomEvents();
 
     setTimeout(() => {
 
-        alert("NO DEBISTE ENTRAR");
+        createScaryFace();
 
-    }, 2500);
+    }, 6000);
+
+    setTimeout(() => {
+
+        fakeCrash();
+
+    }, 14000);
 }
 
-// Texto aleatorio creepy
-function randomCreepyText() {
+// SONIDO
 
-    const warning = document.querySelector(".warning");
+function playDisturbingSound(){
+
+    const audio =
+        new Audio(
+            "https://www.soundjay.com/human/sounds/scream-01.mp3"
+        );
+
+    audio.volume = 0.15;
+
+    audio.play();
+}
+
+// CAMBIAR MENSAJES
+
+function randomText(){
+
+    const warning =
+        document.querySelector(".warning");
 
     setInterval(() => {
 
         const random =
-            creepyMessages[
+            creepyTexts[
                 Math.floor(
-                    Math.random() * creepyMessages.length
+                    Math.random() *
+                    creepyTexts.length
                 )
             ];
 
         warning.innerText = random;
 
-    }, 3000);
+    }, 2500);
 }
 
-// Efecto de glitch visual
-function randomGlitch() {
+// GLITCH VISUAL
+
+function screenDistortion(){
 
     setInterval(() => {
 
         document.body.style.filter =
-            "contrast(150%) brightness(120%)";
+            "contrast(180%) brightness(130%) blur(1px)";
 
         setTimeout(() => {
 
-            document.body.style.filter = "none";
+            document.body.style.filter =
+                "none";
 
         }, 120);
-
-    }, 5000);
-}
-
-// Pantalla roja aleatoria
-function redFlash() {
-
-    setInterval(() => {
-
-        const randomChance = Math.random();
-
-        if(randomChance > 0.7){
-
-            document.body.style.background = "#300";
-
-            setTimeout(() => {
-
-                document.body.style.background = "black";
-
-            }, 200);
-        }
-
-    }, 4000);
-}
-
-// Crear caras fantasma
-function createGhostFace(){
-
-    const ghost = document.createElement("div");
-
-    ghost.innerHTML = "☠";
-
-    ghost.style.position = "fixed";
-    ghost.style.left =
-        Math.random() * window.innerWidth + "px";
-
-    ghost.style.top =
-        Math.random() * window.innerHeight + "px";
-
-    ghost.style.fontSize = "40px";
-
-    ghost.style.opacity = "0";
-
-    ghost.style.color = "white";
-
-    ghost.style.transition = "0.5s";
-
-    document.body.appendChild(ghost);
-
-    setTimeout(() => {
-        ghost.style.opacity = "0.8";
-    },100);
-
-    setTimeout(() => {
-        ghost.style.opacity = "0";
-    },800);
-
-    setTimeout(() => {
-        ghost.remove();
-    },1200);
-}
-
-// Apariciones aleatorias
-function ghostEvents(){
-
-    setInterval(() => {
-
-        const chance = Math.random();
-
-        if(chance > 0.8){
-            createGhostFace();
-            playGlitch();
-        }
 
     }, 3500);
 }
 
-// Cambiar título del navegador
-function titleDistortion(){
+// PARPADEO ROJO
+
+function redFlash(){
+
+    setInterval(() => {
+
+        if(Math.random() > 0.6){
+
+            document.body.style.background =
+                "#250000";
+
+            setTimeout(() => {
+
+                document.body.style.background =
+                    "black";
+
+            }, 150);
+        }
+
+    }, 3000);
+}
+
+// CREAR CARA TERROR
+
+function createScaryFace(){
+
+    const img =
+        document.createElement("img");
+
+    img.src =
+        "https://i.imgur.com/8Q2QF6B.png";
+
+    img.classList.add("face");
+
+    img.style.left =
+        Math.random() *
+        (window.innerWidth - 250) + "px";
+
+    img.style.top =
+        Math.random() *
+        (window.innerHeight - 250) + "px";
+
+    document.body.appendChild(img);
+
+    setTimeout(() => {
+
+        img.remove();
+
+    }, 300);
+}
+
+// EVENTOS ALEATORIOS
+
+function startRandomEvents(){
+
+    setInterval(() => {
+
+        if(Math.random() > 0.7){
+
+            createScaryFace();
+
+        }
+
+    }, 5000);
+
+    redFlash();
+
+    randomText();
+}
+
+// TITULO CAMBIANDO
+
+function titleCorruption(){
 
     const titles = [
+
         "4NOMAL0",
         "RUN",
         "DON'T LOOK",
-        "WATCHING YOU",
-        "SIGNAL LOST"
+        "HELP",
+        "WATCHING YOU"
     ];
 
     setInterval(() => {
@@ -167,16 +190,51 @@ function titleDistortion(){
         document.title =
             titles[
                 Math.floor(
-                    Math.random() * titles.length
+                    Math.random() *
+                    titles.length
                 )
             ];
 
-    }, 2000);
+    }, 1500);
 }
 
-// Iniciar efectos
-randomCreepyText();
-randomGlitch();
-redFlash();
-ghostEvents();
-titleDistortion();
+// FALSO CRASH
+
+function fakeCrash(){
+
+    const crash =
+        document.createElement("div");
+
+    crash.style.position = "fixed";
+    crash.style.top = "0";
+    crash.style.left = "0";
+    crash.style.width = "100%";
+    crash.style.height = "100%";
+
+    crash.style.background = "black";
+
+    crash.style.color = "red";
+
+    crash.style.display = "flex";
+    crash.style.justifyContent = "center";
+    crash.style.alignItems = "center";
+
+    crash.style.fontSize = "2rem";
+
+    crash.style.zIndex = "99999";
+
+    crash.innerHTML =
+        "SIGNAL LOST";
+
+    document.body.appendChild(crash);
+
+    setTimeout(() => {
+
+        crash.remove();
+
+    }, 4000);
+}
+
+// INICIO GENERAL
+
+titleCorruption();
