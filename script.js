@@ -238,5 +238,3 @@ function fakeCrash(){
 // INICIO GENERAL
 
 titleCorruption();
-
-const idNotaParaAbrir = const idNotaParaAbrir = 'blocknotas'
