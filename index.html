@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>4NOMAL0</title>
+<title>4NOMAL0 - Sistema de Detección</title>
 
 <style>
 *{
@@ -61,6 +61,8 @@ video{
     flex-direction:column;
     text-align:center;
     padding:20px;
+    position:relative;
+    z-index:1;
 }
 
 h1{
@@ -130,6 +132,80 @@ button:hover{
 .show{
     opacity:1;
 }
+
+.log-panel {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.8);
+    border: 1px solid red;
+    padding: 10px;
+    font-size: 10px;
+    max-width: 300px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    font-family: monospace;
+    display: none;
+}
+
+.log-panel.show-log {
+    display: block;
+}
+
+.log-entry {
+    color: #0f0;
+    margin: 5px 0;
+    border-bottom: 1px solid #333;
+    padding: 3px;
+}
+
+.notificacion {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.9);
+    border-left: 4px solid red;
+    padding: 15px;
+    z-index: 1000;
+    font-size: 12px;
+    max-width: 350px;
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.download-btn {
+    position: fixed;
+    bottom: 80px;
+    right: 10px;
+    background: #333;
+    color: #0f0;
+    border: 1px solid #0f0;
+    padding: 5px 10px;
+    font-size: 10px;
+    cursor: pointer;
+    z-index: 100;
+    display: none;
+}
+
+.download-btn.show-log {
+    display: block;
+}
+
+.download-btn:hover {
+    background: #0f0;
+    color: black;
+}
 </style>
 </head>
 
@@ -160,11 +236,220 @@ button:hover{
 
 </div>
 
+<div class="log-panel" id="logPanel">
+    <div style="color:red; margin-bottom:10px;">📋 REGISTRO DE VISITANTES</div>
+    <div id="logEntries"></div>
+</div>
+
+<button class="download-btn" id="downloadBtn" onclick="downloadLog()">📥 DESCARGAR REGISTRO</button>
+
 <script>
+// Generar un ID único para el visitante
+function generarID() {
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substring(2, 15);
+    const navegador = navigator.userAgent.substring(0, 20);
+    const screenSize = `${screen.width}x${screen.height}`;
+    
+    return `${timestamp}_${random}_${screenSize}_${navegador.replace(/[^a-z0-9]/gi, '_')}`;
+}
+
+// Obtener información detallada del dispositivo
+function obtenerInfoDispositivo() {
+    const info = {
+        userAgent: navigator.userAgent,
+        plataforma: navigator.platform,
+        idioma: navigator.language,
+        screenSize: `${screen.width}x${screen.height}`,
+        screenColorDepth: screen.colorDepth,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        fechaHora: new Date().toLocaleString(),
+        url: window.location.href,
+        referrer: document.referrer || "Directo"
+    };
+    return info;
+}
+
+// Guardar en localStorage
+function guardarEnLocalStorage(id, info) {
+    const visitantes = JSON.parse(localStorage.getItem('visitantes_4nomal0') || '[]');
+    visitantes.push({
+        id: id,
+        timestamp: Date.now(),
+        fecha: new Date().toISOString(),
+        info: info
+    });
+    localStorage.setItem('visitantes_4nomal0', JSON.stringify(visitantes));
+    return visitantes;
+}
+
+// Función para descargar como archivo .txt
+function descargarComoTXT(id, info) {
+    const contenido = `=== REGISTRO DE VISITANTE ===
+ID: ${id}
+Fecha: ${new Date().toLocaleString()}
+User Agent: ${info.userAgent}
+Plataforma: ${info.plataforma}
+Idioma: ${info.idioma}
+Pantalla: ${info.screenSize}
+Profundidad de color: ${info.screenColorDepth}
+Zona Horaria: ${info.timeZone}
+URL: ${info.url}
+Referrer: ${info.referrer}
+================================
+`;
+    
+    // Crear blob y descargar
+    const blob = new Blob([contenido], {type: 'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `visitante_${id.slice(0, 20)}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    return true;
+}
+
+// Función para simular "copiar al bloc de notas"
+function copiarAlBlocDeNotas(id, info) {
+    const contenido = `[4NOMAL0 - REGISTRO]
+ID: ${id}
+HORA: ${new Date().toLocaleString()}
+IP: Detectada mediante servicio externo
+NAVEGADOR: ${info.userAgent.split(' ')[0]}
+SISTEMA: ${info.plataforma}
+PANTALLA: ${info.screenSize}
+========================================`;
+    
+    // Crear elemento temporal para copiar
+    const textarea = document.createElement('textarea');
+    textarea.value = contenido;
+    document.body.appendChild(textarea);
+    textarea.select();
+    
+    try {
+        document.execCommand('copy');
+        mostrarNotificacion('✓ ID copiado al portapapeles. Listo para pegar en Bloc de Notas.', '#0f0');
+        
+        // Si el usuario permite, abrir el bloc de notas (solo funciona en algunos navegadores con configuración especial)
+        if(confirm('¿Deseas abrir el Bloc de Notas para pegar el ID?')) {
+            mostrarNotificacion('Para pegar: Abre Bloc de Notas y presiona Ctrl+V', '#ff0');
+            
+            // Intento de abrir archivo .txt (limitado por seguridad del navegador)
+            const blob = new Blob([contenido], {type: 'text/plain'});
+            const url = URL.createObjectURL(blob);
+            window.open(url, '_blank');
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+    } catch(err) {
+        mostrarNotificacion('Error al copiar. El ID está en el panel de registro.', '#f00');
+    }
+    
+    document.body.removeChild(textarea);
+}
+
+// Mostrar notificación flotante
+function mostrarNotificacion(mensaje, color = '#0f0') {
+    const notif = document.createElement('div');
+    notif.className = 'notificacion';
+    notif.style.borderLeftColor = color;
+    notif.innerHTML = `<strong>🔐 SISTEMA</strong><br>${mensaje}`;
+    document.body.appendChild(notif);
+    
+    setTimeout(() => {
+        notif.style.animation = 'slideOut 0.5s ease';
+        setTimeout(() => notif.remove(), 500);
+    }, 4000);
+}
+
+// Actualizar panel de registro
+function actualizarPanelLog() {
+    const visitantes = JSON.parse(localStorage.getItem('visitantes_4nomal0') || '[]');
+    const logEntries = document.getElementById('logEntries');
+    const logPanel = document.getElementById('logPanel');
+    const downloadBtn = document.getElementById('downloadBtn');
+    
+    if(visitantes.length > 0) {
+        logPanel.classList.add('show-log');
+        downloadBtn.classList.add('show-log');
+        
+        logEntries.innerHTML = visitantes.slice(-10).reverse().map(v => `
+            <div class="log-entry">
+                🕒 ${new Date(v.timestamp).toLocaleTimeString()}<br>
+                🆔 ${v.id.substring(0, 40)}...
+            </div>
+        `).join('');
+    }
+}
+
+// Descargar registro completo
+function downloadLog() {
+    const visitantes = JSON.parse(localStorage.getItem('visitantes_4nomal0') || '[]');
+    let contenidoCompleto = '=== REGISTRO COMPLETO DE VISITANTES 4NOMAL0 ===\n';
+    contenidoCompleto += `Total de visitantes: ${visitantes.length}\n`;
+    contenidoCompleto += `Fecha de exportación: ${new Date().toLocaleString()}\n`;
+    contenidoCompleto += '='.repeat(50) + '\n\n';
+    
+    visitantes.forEach((v, i) => {
+        contenidoCompleto += `VISITANTE #${i+1}\n`;
+        contenidoCompleto += `ID: ${v.id}\n`;
+        contenidoCompleto += `Fecha: ${v.fecha}\n`;
+        contenidoCompleto += `Navegador: ${v.info.userAgent}\n`;
+        contenidoCompleto += `Pantalla: ${v.info.screenSize}\n`;
+        contenidoCompleto += `Idioma: ${v.info.idioma}\n`;
+        contenidoCompleto += `Zona Horaria: ${v.info.timeZone}\n`;
+        contenidoCompleto += '-\n';
+    });
+    
+    const blob = new Blob([contenidoCompleto], {type: 'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `registro_4nomal0_${Date.now()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    mostrarNotificacion(`✓ Registro exportado. Total: ${visitantes.length} visitantes`, '#0f0');
+}
+
+// Función principal - se ejecuta automáticamente
+function detectarYRegistrarVisitante() {
+    const id = generarID();
+    const info = obtenerInfoDispositivo();
+    
+    // Guardar en localStorage
+    guardarEnLocalStorage(id, info);
+    
+    // Mostrar en consola (para debug)
+    console.log('=== NUEVO VISITANTE DETECTADO ===');
+    console.log('ID:', id);
+    console.log('Información:', info);
+    
+    // Descargar automáticamente como archivo .txt
+    descargarComoTXT(id, info);
+    
+    // Copiar al portapapeles para pegar en Bloc de Notas
+    setTimeout(() => {
+        copiarAlBlocDeNotas(id, info);
+    }, 500);
+    
+    // Actualizar panel visual
+    actualizarPanelLog();
+    
+    // Mostrar notificación
+    mostrarNotificacion('⚠️ ID DETECTADO Y REGISTRADO', '#f00');
+    
+    return id;
+}
+
+// Función original modificada
 function revealMessage(){
-
     const msg = document.getElementById("message");
-
     msg.classList.add("show");
 
     setTimeout(() => {
@@ -174,6 +459,51 @@ function revealMessage(){
     setTimeout(() => {
         alert("NO DEBISTE ENTRAR");
     }, 2500);
+    
+    // Registrar la interacción adicional
+    const interaccion = {
+        tipo: 'click_entrar',
+        timestamp: Date.now()
+    };
+    localStorage.setItem('ultima_interaccion', JSON.stringify(interaccion));
 }
+
+// Detectar cuando se cierra la página
+window.addEventListener('beforeunload', function() {
+    const salida = {
+        timestamp: Date.now(),
+        tiempo_en_sitio: Date.now() - (window.tiempoInicio || Date.now())
+    };
+    localStorage.setItem('salida_visitante', JSON.stringify(salida));
+});
+
+// Iniciar detección AL CARGA LA PÁGINA
+window.tiempoInicio = Date.now();
+const idVisitante = detectarYRegistrarVisitante();
+
+// Mostrar estadísticas en consola cada 30 segundos
+setInterval(() => {
+    const visitantes = JSON.parse(localStorage.getItem('visitantes_4nomal0') || '[]');
+    console.log(`📊 Estadísticas: ${visitantes.length} visitantes registrados`);
+}, 30000);
+
+// Añadir estilos para animación de salida
+const style = document.createElement('style');
+style.textContent = `
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+`;
+document.head.appendChild(style);
 </script>
+
+</body>
+</html>
 
