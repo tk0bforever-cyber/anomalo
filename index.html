@@ -2,13 +2,210 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PALE LUNA</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+body{
+    margin:0;
+    background:black;
+    color:white;
+    font-family:"Courier New", monospace;
+    padding:30px;
+    overflow:hidden;
+}
+
+#screen{
+    white-space:pre-line;
+    font-size:20px;
+    line-height:1.6;
+}
+
+input{
+    background:black;
+    border:none;
+    outline:none;
+    color:white;
+    font-size:20px;
+    font-family:"Courier New", monospace;
+    width:100%;
+}
+
+.glitch{
+    animation:glitch 0.1s infinite;
+}
+
+@keyframes glitch{
+    0%{transform:translate(0,0);}
+    25%{transform:translate(-2px,2px);}
+    50%{transform:translate(2px,-2px);}
+    75%{transform:translate(-1px,1px);}
+    100%{transform:translate(0,0);}
+}
+
+.flash{
+    animation:flash 0.2s infinite;
+}
+
+@keyframes flash{
+    0%{background:black;color:white;}
+    50%{background:white;color:black;}
+    100%{background:black;color:white;}
+}
+</style>
 </head>
+
 <body>
 
 <div id="screen"></div>
 
-<script src="game.js"></script>
+<script>
+const screen = document.getElementById("screen");
+
+let estado = {
+    cordura: 100,
+    fase: 1
+};
+
+// ---------------- INTRO ----------------
+
+const intro = [
+"INICIANDO SISTEMA...",
+"",
+"PALE LUNA",
+"",
+"NO HAY SEÑAL DE SALIDA.",
+"",
+"UNA LUNA PÁLIDA TE OBSERVA.",
+"",
+"COMANDOS: norte / sur / mirar",
+"",
+">"
+];
+
+let i = 0;
+
+function escribirIntro(){
+    if(i < intro.length){
+        screen.innerHTML += intro[i] + "\n";
+        i++;
+        setTimeout(escribirIntro, 800);
+    } else {
+        input();
+        loopEventos();
+    }
+}
+
+escribirIntro();
+
+// ---------------- INPUT ----------------
+
+function input(){
+    const inp = document.createElement("input");
+    screen.appendChild(inp);
+    inp.focus();
+
+    inp.addEventListener("keydown",(e)=>{
+        if(e.key === "Enter"){
+            const cmd = inp.value.toLowerCase().trim();
+            screen.innerHTML += cmd + "\n";
+            inp.remove();
+            procesar(cmd);
+        }
+    });
+}
+
+// ---------------- LÓGICA ----------------
+
+function procesar(cmd){
+
+    if(cmd === "norte"){
+        screen.innerHTML += "\nCAMINAS HACIA EL NORTE...\n";
+        estado.cordura -= 3;
+        check();
+    }
+
+    else if(cmd === "sur"){
+        screen.innerHTML += "\nTE ALEJAS HACIA EL SUR...\n";
+        estado.cordura -= 6;
+        check();
+    }
+
+    else if(cmd === "mirar"){
+        screen.innerHTML += "\nLA LUNA TE DEVUELVE LA MIRADA.\n";
+        estado.cordura -= 1;
+    }
+
+    else{
+        screen.innerHTML += "\nCOMANDO DESCONOCIDO.\n";
+    }
+
+    input();
+}
+
+// ---------------- SISTEMA DE FASES ----------------
+
+function check(){
+
+    if(estado.cordura < 80 && estado.fase === 1){
+        estado.fase = 2;
+        screen.innerHTML += "\nLOS ÁRBOLES SE MUEVEN...\n";
+    }
+
+    if(estado.cordura < 60 && estado.fase === 2){
+        estado.fase = 3;
+        document.body.classList.add("glitch");
+        screen.innerHTML += "\nALGO NO ES NORMAL AQUÍ...\n";
+    }
+
+    if(estado.cordura < 40 && estado.fase === 3){
+        estado.fase = 4;
+        screen.innerHTML += "\nESTÁ MÁS CERCA...\n";
+    }
+
+    if(estado.cordura < 20 && estado.fase === 4){
+        estado.fase = 5;
+        document.body.classList.add("flash");
+        screen.innerHTML += "\nCORRE.\n";
+    }
+}
+
+// ---------------- EVENTOS 30 MIN ----------------
+
+function loopEventos(){
+
+    setInterval(()=>{
+
+        if(Math.random() > 0.6){
+            eventos();
+        }
+
+        estado.cordura -= 0.2;
+
+        if(estado.cordura <= 0){
+            screen.innerHTML += "\nFINAL: YA NO ERES TÚ.\n";
+            document.body.classList.add("glitch");
+        }
+
+    },3000);
+}
+
+// ---------------- EVENTOS ALEATORIOS ----------------
+
+function eventos(){
+
+    const lista = [
+        "ESCUCHAS PASOS DETRÁS DE TI.",
+        "LA LUNA PARECE MÁS GRANDE.",
+        "NO ESTÁS SOLO.",
+        "EL ENTORNO FALLA POR SEGUNDOS.",
+        "NO MIRES ARRIBA."
+    ];
+
+    const e = lista[Math.floor(Math.random()*lista.length)];
+    screen.innerHTML += "\n" + e + "\n";
+}
+</script>
+
 </body>
 </html>
