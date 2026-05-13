@@ -1,109 +1,67 @@
-const player = document.getElementById("player");
-const shadow = document.getElementById("shadow");
-const finalText = document.getElementById("finalText");
-const game = document.getElementById("game");
+const screen = document.getElementById("screen");
 
-let x = 120;
-let stage = 0;
+const intro = [
+"BOOTING...",
+"",
+"PALE LUNA",
+"",
+"YOU ARE IN A DARK PLACE.",
+"",
+"THERE IS A PALE MOON.",
+"",
+"TYPE: NORTH / SOUTH",
+"",
+">"
+];
 
-// MOVIMIENTO
-document.addEventListener("keydown", (e)=>{
+let line = 0;
 
-    if(e.key === "ArrowRight"){
-        x += 20;
+function typeIntro(){
+    if(line < intro.length){
+        screen.innerHTML += intro[line] + "\n";
+        line++;
+        setTimeout(typeIntro, 900);
+    } else {
+        commandInput();
     }
+}
 
-    if(e.key === "ArrowLeft"){
-        x -= 20;
+typeIntro();
+
+function commandInput(){
+    const input = document.createElement("input");
+    screen.appendChild(input);
+    input.focus();
+
+    input.addEventListener("keydown",(e)=>{
+        if(e.key === "Enter"){
+            const cmd = input.value.toLowerCase();
+            screen.innerHTML += cmd + "\n";
+            input.remove();
+            process(cmd);
+        }
+    });
+}
+
+function process(cmd){
+    if(cmd === "north"){
+        north();
+    } else if(cmd === "south"){
+        south();
+    } else {
+        screen.innerHTML += "\nUNKNOWN.\n\n>";
+        commandInput();
     }
+}
 
-    // LIMITE
-    if(x < 0){
-        x = 0;
-    }
+function north(){
+    setTimeout(()=>screen.innerHTML += "\nYOU WALK NORTH.\n",1000);
+    setTimeout(()=>screen.innerHTML += "TREES ARE DEAD.\n",2500);
+    setTimeout(()=>document.body.classList.add("glitch"),4000);
+    setTimeout(()=>screen.innerHTML += "RUN.\n",6000);
+    setTimeout(()=>document.body.classList.add("flash"),7000);
+}
 
-    if(x > window.innerWidth - 50){
-        x = window.innerWidth - 50;
-    }
-
-    player.style.left = x + "px";
-
-    // EVENTO 1
-    if(x > 400 && stage === 0){
-
-        stage = 1;
-
-        setTimeout(()=>{
-
-            document.getElementById("message").innerHTML =
-            "No deberías estar aquí...";
-
-        },1000);
-    }
-
-    // EVENTO 2
-    if(x > 700 && stage === 1){
-
-        stage = 2;
-
-        shadow.style.opacity = 1;
-
-        setTimeout(()=>{
-
-            shadow.style.right = "500px";
-
-        },500);
-
-        setTimeout(()=>{
-
-            document.getElementById("message").innerHTML =
-            "Míralo.";
-
-        },2000);
-    }
-
-    // FINAL
-    if(x > 1000 && stage === 2){
-
-        stage = 3;
-
-        game.classList.add("flash");
-
-        setTimeout(()=>{
-
-            finalText.style.opacity = 1;
-
-        },1000);
-
-        setTimeout(()=>{
-
-            document.getElementById("message").innerHTML =
-            "PALE LUNA";
-
-        },2000);
-
-        setTimeout(()=>{
-
-            alert("No hay regreso.");
-
-        },4000);
-    }
-
-});
-
-// PARPADEO DE LA LUNA
-setInterval(()=>{
-
-    const moon = document.getElementById("moon");
-
-    moon.style.opacity =
-    Math.random() > 0.5 ? "1" : "0.6";
-
-},800);
-
-// SONIDO AMBIENTE FALSO
-setInterval(()=>{
-
-    console.log("...algo te observa...");
-
-},5000);
+function south(){
+    setTimeout(()=>screen.innerHTML += "\nNOTHING HERE.\nYOU ARE SAFE.\n",1000);
+}
