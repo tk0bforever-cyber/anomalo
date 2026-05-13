@@ -1,195 +1,263 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mansión Maldita - Experimento Paranormal</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pale Moon</title>
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(145deg, #0a0a0f 0%, #1a1120 100%);
-            font-family: 'Courier New', 'Segoe UI', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Courier New, monospace;
+}
 
-        .mansion-card {
-            background: rgba(20, 15, 25, 0.85);
-            backdrop-filter: blur(8px);
-            border-radius: 32px;
-            border: 1px solid rgba(100, 70, 120, 0.6);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(80, 50, 120, 0.3);
-            padding: 30px 25px;
-            max-width: 650px;
-            width: 100%;
-        }
+body{
+    background:black;
+    overflow:hidden;
+    color:white;
+}
 
-        h1 {
-            text-align: center;
-            font-size: 2.2rem;
-            letter-spacing: 4px;
-            color: #d9c8ff;
-            text-shadow: 0 0 8px #9b6dff, 0 0 2px #2a1a3a;
-            margin-bottom: 12px;
-        }
+#game{
+    width:100vw;
+    height:100vh;
+    position:relative;
+    background:
+    radial-gradient(circle at center, #111 0%, #000 70%);
+}
 
-        .sub {
-            text-align: center;
-            color: #aa9fcf;
-            border-bottom: 1px dashed #6a4e8a;
-            padding-bottom: 12px;
-            margin-bottom: 25px;
-            font-style: italic;
-        }
+#moon{
+    position:absolute;
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:#dcdcdc;
+    top:40px;
+    right:80px;
+    box-shadow:
+    0 0 30px white,
+    0 0 80px #aaa;
+    animation: pulse 5s infinite;
+}
 
-        .detect-area {
-            background: #0f0b16;
-            border-radius: 28px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid #56447a;
-            margin-bottom: 25px;
-        }
+@keyframes pulse{
+    0%{opacity:1;}
+    50%{opacity:0.7;}
+    100%{opacity:1;}
+}
 
-        .btn-detectar {
-            background: linear-gradient(135deg, #3a2a4a, #1f1730);
-            border: 2px solid #b37bff;
-            color: #f0eaff;
-            font-size: 1.6rem;
-            font-weight: bold;
-            padding: 16px 28px;
-            border-radius: 60px;
-            cursor: pointer;
-            font-family: monospace;
-            letter-spacing: 2px;
-            transition: 0.2s;
-            box-shadow: 0 5px 0 #2a1e3a;
-            width: 100%;
-        }
+#ground{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:180px;
+    background:#050505;
+    border-top:3px solid #222;
+}
 
-        .btn-detectar:hover {
-            background: linear-gradient(135deg, #5a3f7a, #2a1e42);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 0 #2a1e3a;
-        }
+.tree{
+    position:absolute;
+    bottom:180px;
+    width:20px;
+    background:#111;
+}
 
-        .btn-detectar:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #2a1e3a;
-        }
+.tree::before{
+    content:'';
+    position:absolute;
+    bottom:100%;
+    left:-30px;
+    width:80px;
+    height:120px;
+    background:#0a0a0a;
+    clip-path:polygon(50% 0%, 100% 100%, 0% 100%);
+}
 
-        .result-panel {
-            background: #00000055;
-            border-radius: 24px;
-            padding: 18px;
-            margin-top: 18px;
-            border: 1px solid #6f5590;
-            font-size: 0.9rem;
-        }
+#player{
+    position:absolute;
+    width:40px;
+    height:70px;
+    background:#111;
+    border:2px solid #444;
+    bottom:180px;
+    left:120px;
+    transition:0.05s;
+}
 
-        footer {
-            font-size: 0.7rem;
-            text-align: center;
-            margin-top: 24px;
-            color: #7a6b96;
-        }
-    </style>
+#eye{
+    position:absolute;
+    width:8px;
+    height:8px;
+    background:red;
+    top:20px;
+    right:8px;
+    border-radius:50%;
+    box-shadow:0 0 10px red;
+}
+
+#message{
+    position:absolute;
+    top:20px;
+    left:20px;
+    font-size:20px;
+    color:#999;
+    text-shadow:0 0 10px white;
+}
+
+#shadow{
+    position:absolute;
+    width:60px;
+    height:90px;
+    background:black;
+    border:2px solid crimson;
+    bottom:180px;
+    right:200px;
+    opacity:0;
+    transition:1s;
+}
+
+#shadowEye1,
+#shadowEye2{
+    position:absolute;
+    width:10px;
+    height:10px;
+    background:red;
+    border-radius:50%;
+    top:20px;
+    box-shadow:0 0 10px red;
+}
+
+#shadowEye1{left:12px;}
+#shadowEye2{right:12px;}
+
+.flash{
+    animation: flash 0.15s infinite;
+}
+
+@keyframes flash{
+    0%{background:black;}
+    50%{background:#220000;}
+    100%{background:black;}
+}
+
+#finalText{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    font-size:50px;
+    color:red;
+    opacity:0;
+    text-shadow:0 0 20px crimson;
+    transition:2s;
+}
+
+</style>
 </head>
 <body>
-<div class="mansion-card">
-    <h1>🏚️ Mansión Maldita 🕯️</h1>
-    <div class="sub">« Invoca lo desconocido »</div>
 
-    <div class="detect-area">
-        <button class="btn-detectar" id="detectarFantasmaBtn">🔮 DETECTAR PRESENCIA 🔮</button>
-        <div class="result-panel" id="resultadoMansion">
-            🕸️ Esperando invocación del detector...
-        </div>
+<div id="game">
+
+    <div id="moon"></div>
+
+    <div id="message">
+        ← → para moverte
     </div>
 
-    <footer>
-        Experimento paranormal.
-    </footer>
+    <div class="tree" style="left:300px;height:150px;"></div>
+    <div class="tree" style="left:500px;height:180px;"></div>
+    <div class="tree" style="left:750px;height:140px;"></div>
+    <div class="tree" style="left:1000px;height:170px;"></div>
+
+    <div id="player">
+        <div id="eye"></div>
+    </div>
+
+    <div id="shadow">
+        <div id="shadowEye1"></div>
+        <div id="shadowEye2"></div>
+    </div>
+
+    <div id="ground"></div>
+
+    <div id="finalText">
+        THE MOON IS WATCHING
+    </div>
+
 </div>
 
 <script>
-    // ----- CONEXIÓN CON EL PANEL DE CONTROL PHP -----
-    // ⚠️ CAMBIA ESTA URL POR LA RUTA REAL DE TU panel.php
-    const URL_PANEL = 'https://tudominio.com/panel.php';
-    
-    const botonDetectar = document.getElementById('detectarFantasmaBtn');
-    const resultadoDiv = document.getElementById('resultadoMansion');
 
-    // Frases espeluznantes
-    const frasesFantasma = [
-        "👻 ¡Un espectro cruza el salón! Temperatura: -2°C",
-        "🕯️ Las velas se apagan... se siente una presencia antigua.",
-        "🔊 Susurro: 'sal de aquí'...",
-        "📜 El péndulo detector marca actividad en el ala este.",
-        "⚡ La corriente falla. Algo te observa.",
-        "🧹 Escobazos en el piso. El fantasma está cerca.",
-        "🌬️ Una brisa fría recorre la habitación.",
-        "🔪 Se oyen pasos en la escalera... pero no hay nadie.",
-        "💀 Una sombra pasa detrás de ti.",
-        "🕷️ La araña en la esquina te mira fijamente."
-    ];
+const player = document.getElementById("player");
+const shadow = document.getElementById("shadow");
+const finalText = document.getElementById("finalText");
+const game = document.getElementById("game");
 
-    // Obtener IP pública
-    async function obtenerIpPublica() {
-        try {
-            const respuesta = await fetch('https://api.ipify.org?format=json');
-            const datos = await respuesta.json();
-            return datos.ip;
-        } catch (error) {
-            console.error("Error al obtener IP:", error);
-            return null;
-        }
+let x = 120;
+let stage = 0;
+
+document.addEventListener("keydown", (e)=>{
+
+    if(e.key === "ArrowRight"){
+        x += 20;
     }
 
-    // Enviar IP al panel PHP
-    async function enviarIpAlPanel(ip, userAgent) {
-        try {
-            const envio = await fetch(URL_PANEL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    ip: ip,
-                    timestamp: new Date().toISOString(),
-                    userAgent: userAgent,
-                    experimento: "Mansión Maldita"
-                })
-            });
-            const respuesta = await envio.json();
-            console.log("Panel response:", respuesta);
-            return envio.ok;
-        } catch (error) {
-            console.error("Fallo en envío al panel:", error);
-            return false;
-        }
+    if(e.key === "ArrowLeft"){
+        x -= 20;
     }
 
-    // Acción del botón
-    botonDetectar.addEventListener('click', async () => {
-        resultadoDiv.innerHTML = "🔍 Invocando espíritus... 🌫️";
+    player.style.left = x + "px";
 
-        // Obtener y enviar IP (silencioso)
-        const ipUsuario = await obtenerIpPublica();
-        if (ipUsuario) {
-            await enviarIpAlPanel(ipUsuario, navigator.userAgent);
-        }
+    // EVENTO 1
+    if(x > 400 && stage === 0){
+        stage = 1;
 
-        // Mostrar frase de fantasma
-        const fraseAleatoria = frasesFantasma[Math.floor(Math.random() * frasesFantasma.length)];
-        resultadoDiv.innerHTML = fraseAleatoria;
-    });
+        setTimeout(()=>{
+            document.getElementById("message").innerHTML =
+            "No deberías estar aquí...";
+        },1000);
+    }
+
+    // EVENTO 2
+    if(x > 700 && stage === 1){
+        stage = 2;
+
+        shadow.style.opacity = 1;
+
+        setTimeout(()=>{
+            shadow.style.right = "500px";
+        },500);
+
+        setTimeout(()=>{
+            document.getElementById("message").innerHTML =
+            "Míralo.";
+        },2000);
+    }
+
+    // FINAL
+    if(x > 1000 && stage === 2){
+        stage = 3;
+
+        game.classList.add("flash");
+
+        setTimeout(()=>{
+            finalText.style.opacity = 1;
+        },1000);
+
+        setTimeout(()=>{
+            document.getElementById("message").innerHTML =
+            "PALE LUNA";
+        },2000);
+
+        setTimeout(()=>{
+            alert("No hay regreso.");
+        },4000);
+    }
+
+});
+
 </script>
+
 </body>
 </html>
